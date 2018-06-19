@@ -1,0 +1,101 @@
+{% extends 'rmq/base.html' %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+{% block content %}
+<body>
+<section class="content-header">
+
+<ol class="breadcrumb">
+<li><a href="#"><i class="fa fa-dashboard"></i> 位置</a></li>
+<li class="active">队列申请</li>
+</ol>
+</section>
+<div class="tab-pane active" id="settings">
+<form action="/rmq/rmq_apply/" method="POST" class="form-horizontal">
+    {% csrf_token %}
+  <div class="form-group">
+    <label for="inputName" class="col-sm-3 control-label">申请人</label>
+    <div class="col-sm-6">
+      <input type="text" name="users" class="form-control" id="inputName">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputEmail" class="col-sm-3 control-label">申请IP</label>
+    <div class="col-sm-6">
+      <input type="text" name="infoip" class="form-control" id="inputName" >
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputName" class="col-sm-3 control-label">虚拟主机</label>
+
+    <div class="col-sm-6">
+      <input type="text" name="rmq_vhost" class="form-control" id="inputName" >
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="inputName" class="col-sm-3 control-label">队列名称</label>
+
+    <div class="col-sm-6">
+      <input type="text" name="rmq_name" class="form-control" id="inputName" >
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="inputName" class="col-sm-3 control-label">交换机名称</label>
+
+    <div class="col-sm-6">
+      <input type="text" name="rmq_exchange" class="form-control" id="inputName" >
+    </div>
+  </div>
+
+   <div class="form-group">
+    <label for="inputName" class="col-sm-3 control-label">生产方</label>
+
+    <div class="col-sm-6">
+      <input type="text" name="rmq_product" class="form-control" id="inputName" >
+    </div>
+  </div>
+
+   <div class="form-group">
+    <label for="inputName" class="col-sm-3 control-label">生产方负责人</label>
+
+    <div class="col-sm-6">
+      <input type="text" name="rmq_product_user" class="form-control" id="inputName" >
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="inputName" class="col-sm-3 control-label">消费方</label>
+
+    <div class="col-sm-6">
+      <input type="text" name="rmq_consume" class="form-control" id="inputName" >
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="inputName" class="col-sm-3 control-label">消费方负责人</label>
+
+    <div class="col-sm-6">
+      <input type="text" name="rmq_consume_user" class="form-control" id="inputName" >
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="inputExperience" class="col-sm-3 control-label">描述</label>
+
+    <div class="col-sm-6">
+      <textarea name="rmq_comment" class="form-control" id="inputExperience" ></textarea>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-10">
+      <button type="submit" class="btn btn-primary">提交</button>
+    </div>
+  </div>
+</form>
+</div>
+{% endblock %}
+{{ rmq_user }}
+</html>

@@ -1,0 +1,169 @@
+
+{% extends 'rmq/base.html' %}
+{% load staticfiles %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>队列详情</title>
+</head>
+<body>
+<section class="content-header">
+<h1>RMQ队列申请详情</h1>
+<ol class="breadcrumb">
+<li><a href="#"><i class="fa fa-dashboard"></i> 位置</a></li>
+<li class="active">队列详情</li>
+</ol>
+</section>
+<br>
+<a href="/rmq/rmq_export/">导出队列(csv)</a>
+<div class="box-body table-responsive no-padding">
+      <table class="table table-hover">
+        <tbody><tr>
+          <th>队列名称</th>
+          <th>申请人</th>
+          <th>申请日期</th>
+          <th>状态</th>
+          <th>描述</th>
+        </tr>
+          {% for rmq in rmq_detail %}
+        <tr>
+          <div>
+            <td><span  data-name="{{ rmq.rmq_name }}" data-toggle="modal">
+              {{ rmq.rmq_name }}</span>
+            </td>
+          </div>
+          <td>{{ rmq.users }}</td>
+          <td>{{ rmq.apply_time|date:'Y-m-d' }}</td>
+			   {% if rmq.rmq_status == 0 %}
+          		<td><span class="label label-info" onclick="test({{ rmq.id }})">待审核</span></td>
+          	{% elif rmq.rmq_status == 1 %}
+          		<td><span class="label label-success">已审核</span></td>
+          	{% else %}
+          		<td><span class="label label-danger">审核失败</span></td>
+          	{% endif %}
+
+          <td>{{ rmq.rmq_comment}}</td>
+        </tr>
+         {% endfor %}
+      </tbody></table>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">队列详细信息</h4>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                  <label class="col-sm-3 control-label">队列名称</label>
+                  <div class="rmq_name" class="col-sm-6">
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label class="col-sm-3 control-label">申请时间</label>
+                  <div class="apply_time" class="col-sm-6">
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label class="col-sm-3 control-label">虚拟主机</label>
+                  <div class="rmq_vhost" class="col-sm-6">
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label class="col-sm-3 control-label">交换机</label>
+                  <div class="rmq_exchange" class="col-sm-6">
+                  </div>
+              </div>
+              
+              <div class="form-group">
+                  <label class="col-sm-3 control-label">描述</label>
+                  <div class="rmq_comment" class="col-sm-6">
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label class="col-sm-3 control-label">生产方</label>
+                  <div class="rmq_product" class="col-sm-6">
+                  </div>
+              </div>
+              
+              <div class="form-group">
+                  <label class="col-sm-3 control-label">生产方负责人</label>
+                  <div class="rmq_product_user" class="col-sm-6">
+                  </div>
+              </div>
+              
+              <div class="form-group">
+                  <label class="col-sm-3 control-label">消费方</label>
+                  <div class="rmq_consume" class="col-sm-6">
+                  </div>
+              </div>
+              
+              <div class="form-group">
+                  <label class="col-sm-3 control-label">消费方负责人</label>
+                  <div class="rmq_consume_user" class="col-sm-6">
+                  </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<script type="text/javascript">
+  window.onload = function () {
+    $('.table-hover td span').click(function () {
+      var rmq_name = $(this).attr('data-name');
+      $.ajax({
+          type : 'post',
+          url  : '/rmq/rmq_detail/',
+          data : {'rmq_name':rmq_name} ,
+          success : function(rmq_dict){
+              //console.log(rmq_dict);
+              //alert(rmq_dict.msg);
+              $('.modal-body .rmq_name').html(rmq_dict['rmq_name'])
+              $('.modal-body .apply_time').html(rmq_dict['apply_time'])
+              $('.modal-body .rmq_vhost').html(rmq_dict['rmq_vhost'])
+              $('.modal-body .rmq_exchange').html(rmq_dict['rmq_exchange'])
+              $('.modal-body .rmq_comment').html(rmq_dict['rmq_comment'])
+              $('.modal-body .rmq_product').html(rmq_dict['rmq_product'])
+              $('.modal-body .rmq_product_user').html(rmq_dict['rmq_product_user'])
+              $('.modal-body .rmq_consume').html(rmq_dict['rmq_consume'])
+              $('.modal-body .rmq_consume_user').html(rmq_dict['rmq_consume_user'])
+              $('#myModal').modal('show');
+            },
+          error : function(e){
+            alert('访问错误!');
+          }
+      })
+    
+    });
+  }
+
+	function test(id){
+			$.ajax({
+                type        : 'post',
+                url         : '/rmq/rmq_check/',
+                data        : {'id':id},
+                success     : function(check_dict){
+    				alert(check_dict['msg']);
+    				window.location.reload();
+                },
+                error    : function(check_dict) {
+                    alert(check_dict['msg']);   
+                    window.location.reload();
+                                 }
+            });
+	}
+
+</script>
+{% endblock %}
+</body>
+</html>
