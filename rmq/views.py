@@ -172,3 +172,12 @@ def rmq_detail(request):
         rmq_dict = Info_apply_rmq.objects.filter(rmq_name=rmq_name).values()[0]
     return JsonResponse(rmq_dict)
 
+#django 分页实现
+from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
+def listing(request):
+    rmq_list = Info_apply_rmq.objects.all()
+    paginator = Paginator(rmq_list,10)
+
+    page = request.GET.get('page')
+    rmq_list_detail = paginator.get_page(page)
+    return render(request,'rmq/listing.html',{'rmq_list_detail':rmq_list_detail})

@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^rmq_check/$',views.rmq_check,name='rmq_check'),
     url(r'^rmq_export/$',views.rmq_export,name='rmq_export'),
     url(r'^rmq_detail/$',views.rmq_detail,name='rmq_detail'),
+    url(r'^rmq_detail_detail?page=\d/$',views.listing,name='listing'),
 
 ]
